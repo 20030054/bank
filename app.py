@@ -19,9 +19,9 @@ if uploaded_file is not None:
         st.dataframe(df.head())
 
         # Extract required columns (modify based on actual file structure)
-        source_col = "Source_Branch"  # Replace with actual source branch column name
-        target_col = "Target_Branch"  # Replace with actual target branch column name
-        amount_col = "Transaction_Amount"  # Replace with actual transaction amount column name
+        source_col = "Branch"  # Replace with actual source branch column name
+        target_col = "Transaction To"  # Replace with actual target branch column name
+        amount_col = "Credit"  # Replace with actual transaction amount column name
 
         if all(col in df.columns for col in [source_col, target_col, amount_col]):
             # Create graph
