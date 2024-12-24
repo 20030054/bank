@@ -3,6 +3,7 @@ import pandas as pd
 import networkx as nx
 from pyvis.network import Network
 import tempfile
+import streamlit.components.v1 as components
 
 # Streamlit app
 st.title("Transaction Visualization among Branches")
@@ -46,11 +47,17 @@ if uploaded_file is not None:
                 weight = data['weight']
                 net.add_edge(source, target, value=weight, title=f"Amount: {weight}")
 
-            # Render the graph
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as tmp_file:
-                net.show(tmp_file.name)
+            # Render the graph using pyvis
+            try:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as tmp_file:
+                    net.save_graph(tmp_file.name)  # Save the graph to an HTML file
+                    tmp_file.seek(0)  # Move the pointer to the start
+                    html_content = tmp_file.read().decode("utf-8")
+
                 st.write("### Transaction Network Graph")
-                st.components.v1.html(tmp_file.read().decode("utf-8"), height=800, scrolling=True)
+                components.html(html_content, height=800, scrolling=True)
+            except Exception as e:
+                st.error(f"An error occurred while rendering the graph: {e}")
 
         else:
             st.error("The uploaded file does not have the required columns: Source_Branch, Target_Branch, Transaction_Amount")
